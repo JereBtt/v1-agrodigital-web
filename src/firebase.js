@@ -21,10 +21,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-console.log("API KEY raw:", import.meta.env.VITE_FIREBASE_API_KEY);
-console.log("API KEY length:", (import.meta.env.VITE_FIREBASE_API_KEY || "").length);
-console.log("AUTH DOMAIN:", import.meta.env.VITE_FIREBASE_AUTH_DOMAIN);
-
 // Servicio de autenticación (email/contraseña)
 export const auth = getAuth(app);
 
