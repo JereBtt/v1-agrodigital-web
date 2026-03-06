@@ -7,10 +7,14 @@
 import { useEffect, useState } from "react";
 import { getAllUsuarios, updateUsuario } from "../api/usuariosApi";
 import { ROLES, tipoDocLabel } from "../data/catalogs";
+import EditUserModal from "../components/EditUserModal";
 
 export default function UsersPage({ currentUid }) {
     const [usuarios, setUsuarios] = useState([]);
     const [error, setError] = useState("");
+
+    const [showModal, setShowModal] = useState(false);
+    const [userToEdit, setUserToEdit] = useState(null);
 
     const load = async () => {
         setError("");
@@ -38,6 +42,22 @@ export default function UsersPage({ currentUid }) {
         await updateUsuario(u.id, { activo: !u.activo });
         await load();
     };
+    // Abro el modal con el usuario seleccionado
+    const handleOpenEdit = (user) => {
+        setUserToEdit(user);
+        setShowModal(true);
+    }
+    // Funcion donde recibo los datos del modal, actualiza Firestore y cierra el modal
+    const handleSaveEdit = async (uid, newData) => {
+        try {
+            await updateUsuario(uid, newData);
+            setShowModal(false);
+            await load(); // Recargo la tabla
+        } catch (e){
+            console.error(e);
+            setError("Error al guardar los cambios del usuario.");
+        }
+    }
 
     return (
         <div>
@@ -88,16 +108,25 @@ export default function UsersPage({ currentUid }) {
                                             {u.activo ? "Sí" : "No"}
                                         </span>
                                     </td>
+                                        
+<td>                                    {/*Agregamos el botón de Editar al lado del de Activar/Desactivar */}
+                                        <div className="d-flex gap-2">
+                                            <button
+                                                className="btn btn-sm btn-outline-primary"
+                                                onClick={() => handleOpenEdit(u)}
+                                            >
+                                                Editar
+                                            </button>
 
-                                    <td>
-                                        <button
-                                            className={`btn btn-sm ${u.activo ? "btn-warning" : "btn-success"}`}
-                                            onClick={() => handleToggleActivo(u)}
-                                            disabled={esMiUsuario} // ✅ bloqueo baja propia
-                                            title={esMiUsuario ? "No podés desactivarte a vos mismo" : ""}
-                                        >
-                                            {u.activo ? "Desactivar" : "Activar"}
-                                        </button>
+                                            <button
+                                                className={`btn btn-sm ${u.activo ? "btn-warning" : "btn-success"}`}
+                                                onClick={() => handleToggleActivo(u)}
+                                                disabled={esMiUsuario} // bloqueo baja prioridad
+                                                title={esMiUsuario ? "No podés desactivarte a vos mismo" : ""}
+                                            >
+                                                {u.activo ? "Desactivar" : "Activar"}
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             );
@@ -123,6 +152,12 @@ export default function UsersPage({ currentUid }) {
                     Luego se crea/edita el perfil en Firestore.
                 </p>
             </div>
+            <EditUserModal 
+                show={showModal} 
+                user={userToEdit} 
+                onClose={() => setShowModal(false)} 
+                onSave={handleSaveEdit} 
+            />
         </div>
     );
 }
