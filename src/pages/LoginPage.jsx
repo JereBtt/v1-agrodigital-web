@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 // Conexión con el proyecto Firebase.
 import { auth } from "../firebase";
 import AuthLayout from "../layouts/AuthLayout";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function LoginPage() {
     // Variables de estado mas función para actualizarlas.
@@ -17,6 +18,8 @@ export default function LoginPage() {
     const [contrasena, setContrasena] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
 
     // Función que se ejecuta al hacer submit en el formulario.
     // async; El programa no se queda congelado esperando la respuesta.
@@ -28,6 +31,7 @@ export default function LoginPage() {
         setError("");
         setLoading(true);
 
+
         // Manejo de errores. Evita que el programa se rompa.
         try {
             // Intentar iniciar sesión con Firebase Authentication usando mail y contraseña.
@@ -35,7 +39,7 @@ export default function LoginPage() {
         } catch (err) {
             // Mostrar mensaje de error al usuario en caso de fallo en login.
             console.error(err);
-            setError("Mail o contraseña incorrectos.");
+            setError("Email o contraseña incorrectos");
         } finally {
             // Siempre al finalizar ocultar indicador de carga.
             setLoading(false);
@@ -53,12 +57,12 @@ export default function LoginPage() {
                     </div>
 
                     {/* Mostrar mensaje de error si existe. */}
-                    {error && <div className="alert alert-danger py-2">{error}</div>}
+                    {error && <div className="alert alert-danger  text-center py-2">{error}</div>}
 
                     {/* Formulario de inicio de sesión */}
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
-                            <label className="form-label">Mail</label>
+                            <label className="form-label">Email</label>
                             <input
                                 type="email"
                                 className="form-control"
@@ -70,32 +74,51 @@ export default function LoginPage() {
                             />
                         </div>
 
-                        <div className="mb-3">
+                        <div className="mb-3" >
                             <label className="form-label">Contraseña</label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                placeholder="********"
-                                value={contrasena}
-                                // Actualizar el estado 'contrasena' cada vez que el usuario escriba en el input.
-                                onChange={(e) => setContrasena(e.target.value)}
-                                required
-                            />
+
+                            <div className="position-relative">
+
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="form-control"
+                                    placeholder="********"
+                                    value={contrasena}
+                                    onChange={(e) => {
+                                        setContrasena(e.target.value);
+                                        if (error) setError("");
+                                    }}
+                                />
+
+                                <span
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{
+                                        position: "absolute",
+                                        right: "12px",
+                                        top: "50%",
+                                        transform: "translateY(-50%)",
+                                        cursor: "pointer",
+                                        color: "black"
+                                    }}
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </span>
+
+
+                            </div>
+
+
                         </div>
 
                         <button
                             type="submit"
                             className="btn btn-success w-100 fw-bold"
                             style={{ borderRadius: 10 }}
-                            disabled={loading}
+                            disabled={loading || !mail || !contrasena}
                         >
                             {loading ? "Ingresando..." : "Ingresar"}
                         </button>
                     </form>
-
-                    <div className="text-center mt-4">
-                        <small className="text-muted">v1-agrodigital-web</small>
-                    </div>
                 </div>
             </div>
         </AuthLayout>
