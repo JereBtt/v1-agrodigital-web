@@ -47,7 +47,24 @@ export default function App() {
   }, []);
 
   // Mientras carga, mostramos feedback
-  if (loading) return <p className="text-center mt-5">Cargando...</p>;
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="card shadow-lg border-0 text-center p-4" style={{ width: 320, borderRadius: 16 }}>
+
+          <div style={{ fontSize: 40 }}>🌾</div>
+          <h4 className="fw-bold text-success mb-3">AgroDigital</h4>
+
+          <div className="d-flex justify-content-center mb-3">
+            <div className="spinner-border text-success" role="status"></div>
+          </div>
+
+          <div className="text-muted">Cargando...</div>
+
+        </div>
+      </div>
+    );
+  }
 
   // Si no hay sesión => Login
   if (!authUser) return <LoginPage />;
@@ -67,7 +84,7 @@ export default function App() {
           className="btn btn-danger mt-3"
           onClick={() => signOut(auth)}
         >
-          Volver al login
+          Volver al Login
         </button>
       </div>
     );
@@ -85,7 +102,7 @@ export default function App() {
           className="btn btn-danger mt-3"
           onClick={() => signOut(auth)}
         >
-          Volver al login
+          Volver al Login
         </button>
       </div>
     );
