@@ -23,7 +23,12 @@ export default function EditUserModal({ show, user, onClose, onSave }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+
+        // Pasa el dni como numero
+        setFormData({
+            ...formData,
+            [name]: name === "dni" ? Number(value) : value
+        });
     };
 
     const handleSubmit = (e) => {
@@ -42,7 +47,7 @@ export default function EditUserModal({ show, user, onClose, onSave }) {
                         <h5 className="modal-title">Editar Perfil de Usuario</h5>
                         <button type="button" className="btn-close" onClick={onClose}></button>
                     </div>
-                    
+
                     <form onSubmit={handleSubmit}>
                         <div className="modal-body">
                             {/* EMAIL (Bloqueado por reglas de Firebase Auth) */}
@@ -65,7 +70,7 @@ export default function EditUserModal({ show, user, onClose, onSave }) {
                             <div className="row">
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">DNI</label>
-                                    <input type="text" className="form-control" name="dni" value={formData.dni} onChange={handleChange} />
+                                    <input type="number" className="form-control" name="dni" value={formData.dni} onChange={handleChange} />
                                 </div>
                                 <div className="col-md-6 mb-3">
                                     <label className="form-label">Teléfono</label>

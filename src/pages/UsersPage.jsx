@@ -53,7 +53,7 @@ export default function UsersPage({ currentUid }) {
             await updateUsuario(uid, newData);
             setShowModal(false);
             await load(); // Recargo la tabla
-        } catch (e){
+        } catch (e) {
             console.error(e);
             setError("Error al guardar los cambios del usuario.");
         }
@@ -78,7 +78,7 @@ export default function UsersPage({ currentUid }) {
 
                     <tbody>
                         {usuarios.map((u) => {
-                            // ✅ Regla: no me puedo modificar a mí mismo (si soy OWNER)
+                            // Regla: no me puedo modificar a mí mismo (si soy OWNER)
                             const esMiUsuario = u.id === currentUid;
 
                             return (
@@ -92,7 +92,7 @@ export default function UsersPage({ currentUid }) {
                                             className="form-select"
                                             value={u.idRol}
                                             onChange={(e) => handleChangeRol(u.id, e.target.value)}
-                                            disabled={esMiUsuario} // ✅ bloqueo cambio de rol propio
+                                            disabled={esMiUsuario} // bloqueo cambio de rol propio
                                             title={esMiUsuario ? "No podés cambiar tu propio rol" : ""}
                                         >
                                             {ROLES.map((r) => (
@@ -108,8 +108,9 @@ export default function UsersPage({ currentUid }) {
                                             {u.activo ? "Sí" : "No"}
                                         </span>
                                     </td>
-                                        
-<td>                                    {/*Agregamos el botón de Editar al lado del de Activar/Desactivar */}
+
+                                    <td>
+                                        {/*Agregamos el botón de Editar al lado del de Activar/Desactivar */}
                                         <div className="d-flex gap-2">
                                             <button
                                                 className="btn btn-sm btn-outline-primary"
@@ -152,11 +153,11 @@ export default function UsersPage({ currentUid }) {
                     Luego se crea/edita el perfil en Firestore.
                 </p>
             </div>
-            <EditUserModal 
-                show={showModal} 
-                user={userToEdit} 
-                onClose={() => setShowModal(false)} 
-                onSave={handleSaveEdit} 
+            <EditUserModal
+                show={showModal}
+                user={userToEdit}
+                onClose={() => setShowModal(false)}
+                onSave={handleSaveEdit}
             />
         </div>
     );

@@ -39,7 +39,7 @@ src/
 
 ## Requisitos
 - Node.js 20+
-- Clonar el repositorio: 
+- Clonar el repositorio: https://github.com/JereBtt/v1-agrodigital-web.git
 
 ## Instalación
 npm install
